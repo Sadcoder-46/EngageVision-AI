@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="content-page">
+    {% include 'components/carousel.html' %}
+    
+    <div class="card card-modern hero-card p-5 text-center">
+        <h2 class="fw-bold mb-3">Welcome {{ user.username }}</h2>
+        <p class="text-muted">You are successfully logged in.</p>
+    </div>
+</div>
+
+{% endblock %}
+
