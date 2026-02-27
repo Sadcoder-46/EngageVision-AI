@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-header">
+        <h1 class="page-title">Engagement Records</h1>
+        <a href="{% url 'engagement:upload_video' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Upload Video
+        </a>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filter-section card-modern">
+        <form method="get" class="filter-form">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Video</label>
+                    <select name="video" class="form-control">
+                        <option value="">All Videos</option>
+                        {% for video in videos %}
+                        <option value="{{ video.id }}">{{ video.title|default:"Video" }} - {{ video.uploaded_at|date:"M d, Y" }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Date</label>
+                    <input type="date" name="date" class="form-control">
+                </div>
+                
+                <div class="filter-group">
+                    <label>Engagement Level</label>
+                    <select name="engagement" class="form-control">
+                        <option value="">All</option>
+                        <option value="high">High (70%+)</option>
+                        <option value="medium">Medium (40-70%)</option>
+                        <option value="low">Low (<40%)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a href="{% url 'engagement:engagement_list' %}" class="btn btn-secondary">Clear</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    {% if records %}
+    <div class="table-responsive card-modern">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Video</th>
+                    <th>Total Students</th>
+                    <th>Attentive</th>
+                    <th>Sleepy</th>
+                    <th>Distracted</th>
+                    <th>Neutral</th>
+                    <th>Engagement %</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.timestamp|date:"M d, Y H:i:s" }}</td>
+                    <td>{{ record.video_upload.title|default:"Video"|truncatechars:15 }}</td>
+                    <td>{{ record.total_students }}</td>
+                    <td><span class="badge badge-success">{{ record.attentive_count }}</span></td>
+                    <td><span class="badge badge-secondary">{{ record.sleepy_count }}</span></td>
+                    <td><span class="badge badge-danger">{{ record.distracted_count }}</span></td>
+                    <td><span class="badge badge-warning">{{ record.neutral_count }}</span></td>
+                    <td>
+                        <div class="engagement-cell">
+                            <div class="engagement-bar">
+                                <div class="engagement-fill" style="width: {{ record.engagement_percentage }}%"></div>
+                            </div>
+                            <span>{{ record.engagement_percentage|floatformat:1 }}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="{% url 'engagement:engagement_detail' record.id %}" class="btn btn-sm btn-info">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    {% if records.has_other_pages %}
+    <div class="pagination">
+        {% if records.has_previous %}
+        <a href="?page={{ records.previous_page_number }}" class="btn btn-secondary">Previous</a>
+        {% endif %}
+        
+        <span class="current-page">Page {{ records.number }} of {{ records.paginator.num_pages }}</span>
+        
+        {% if records.has_next %}
+        <a href="?page={{ records.next_page_number }}" class="btn btn-secondary">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="empty-state card-modern">
+        <i class="fas fa-chart-line"></i>
+        <h3>No Engagement Records</h3>
+        <p>Upload a video to start analyzing classroom engagement.</p>
+        <a href="{% url 'engagement:upload_video' %}" class="btn btn-primary">Upload Video</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .filter-section {
+        margin-bottom: 30px;
+    }
+    
+    .filter-form {
+        padding: 20px;
+    }
+    
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
+    
+    .filter-group {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .filter-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+    
+    .filter-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .engagement-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .engagement-bar {
+        width: 60px;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .engagement-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #28a745, #20c997);
+        border-radius: 4px;
+    }
+    
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .current-page {
+        color: #666;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .empty-state i {
+        font-size: 64px;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h3 {
+        color: #666;
+        margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+        color: #999;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+

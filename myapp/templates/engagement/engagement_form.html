@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="content-page">
+    <div class="card-modern">
+        <h3 class="text-center fw-bold mb-4">{{ action }} Engagement Record</h3>
+        
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                {{ form.student.label_tag }}
+                {{ form.student }}
+                <div class="text-danger small">{{ form.student.errors }}</div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.attention_score.label_tag }}
+                {{ form.attention_score }}
+                <div class="text-danger small">{{ form.attention_score.errors }}</div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.emotion.label_tag }}
+                {{ form.emotion }}
+                <div class="text-danger small">{{ form.emotion.errors }}</div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{% url 'engagement:engagement_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

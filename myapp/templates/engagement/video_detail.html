@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-header">
+        <h1 class="page-title">Video Details</h1>
+        <a href="{% url 'engagement:video_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Videos
+        </a>
+    </div>
+    
+    <div class="video-detail-card">
+        <div class="video-header">
+            <div class="video-icon">
+                <i class="fas fa-video"></i>
+            </div>
+            <div class="video-info">
+                <h2>{{ video.title|default:"CCTV Recording" }}</h2>
+                <p class="upload-date">Uploaded: {{ video.uploaded_at|date:"F d, Y H:i" }}</p>
+                
+                <div class="status-row">
+                    {% if video.processing_status == 'completed' %}
+                        <span class="badge badge-success">Processing Completed</span>
+                    {% elif video.processing_status == 'processing' %}
+                        <span class="badge badge-warning">Processing in Progress</span>
+                    {% elif video.processing_status == 'failed' %}
+                        <span class="badge badge-danger">Processing Failed</span>
+                    {% else %}
+                        <span class="badge badge-secondary">Pending</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="video-stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">Duration</span>
+                <span class="stat-value">{{ video.duration_seconds|floatformat:1|default:"-" }}s</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Frames</span>
+                <span class="stat-value">{{ video.total_frames|default:"-" }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Records Generated</span>
+                <span class="stat-value">{{ records.count }}</span>
+            </div>
+        </div>
+        
+        {% if video.processed %}
+        <div class="video-actions">
+            <a href="{% url 'analytics:analytics' %}?video={{ video.id }}" class="btn btn-primary">
+                <i class="fas fa-chart-line"></i> View Analytics
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="records-section">
+        <h3>Engagement Records</h3>
+        
+        {% if records %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Total Students</th>
+                        <th>Attentive</th>
+                        <th>Sleepy</th>
+                        <th>Distracted</th>
+                        <th>Neutral</th>
+                        <th>Engagement %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.timestamp|date:"H:i:s" }}</td>
+                        <td>{{ record.total_students }}</td>
+                        <td><span class="text-attentive">{{ record.attentive_count }}</span></td>
+                        <td><span class="text-sleepy">{{ record.sleepy_count }}</span></td>
+                        <td><span class="text-distracted">{{ record.distracted_count }}</span></td>
+                        <td><span class="text-neutral">{{ record.neutral_count }}</span></td>
+                        <td>
+                            <div class="engagement-bar">
+                                <div class="engagement-fill" style="width: {{ record.engagement_percentage }}%"></div>
+                                <span class="engagement-text">{{ record.engagement_percentage|floatformat:1 }}%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No engagement records available for this video.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .video-detail-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    
+    .video-header {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        margin-bottom: 25px;
+    }
+    
+    .video-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .video-icon i {
+        font-size: 32px;
+        color: white;
+    }
+    
+    .video-info h2 {
+        margin: 0 0 5px 0;
+        color: #333;
+    }
+    
+    .upload-date {
+        color: #666;
+        margin: 0 0 10px 0;
+    }
+    
+    .video-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-item {
+        text-align: center;
+    }
+    
+    .stat-label {
+        display: block;
+        color: #666;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+    
+    .stat-value {
+        display: block;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .video-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .records-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .records-section h3 {
+        margin: 0 0 20px 0;
+        color: #333;
+    }
+    
+    .records-section .text-attentive { color: #28a745; font-weight: 500; }
+    .records-section .text-sleepy { color: #6c757d; font-weight: 500; }
+    .records-section .text-distracted { color: #dc3545; font-weight: 500; }
+    .records-section .text-neutral { color: #ffc107; font-weight: 500; }
+    
+    .engagement-bar {
+        position: relative;
+        height: 24px;
+        background: #e9ecef;
+        border-radius: 12px;
+        overflow: hidden;
+        min-width: 100px;
+    }
+    
+    .engagement-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        background: linear-gradient(90deg, #28a745, #20c997);
+        transition: width 0.3s;
+    }
+    
+    .engagement-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+</style>
+{% endblock %}
+

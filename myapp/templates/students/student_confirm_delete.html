@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <div class="card-modern">
+        <h3 class="text-center fw-bold mb-4">Delete Student</h3>
+        
+        <p class="text-center">Are you sure you want to delete <strong>{{ student.name }}</strong>?</p>
+        <p class="text-center text-muted">This action cannot be undone.</p>
+        
+        <form method="POST" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'students:student_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

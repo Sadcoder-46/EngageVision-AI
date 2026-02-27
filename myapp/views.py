@@ -5,6 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import RegisterForm, LoginForm
 from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .forms import EngagementRecordForm
+
 
 
 def home(request):
@@ -72,3 +76,20 @@ def about(request):
 @login_required
 def contact(request):
     return render(request, 'contact.html')
+@login_required
+def add_engagement(request):
+    if request.method == 'POST':
+        form = EngagementRecordForm(request.POST)
+        if form.is_valid():
+            record = form.save(commit=False)
+            record.student = request.user
+            record.save()
+            return redirect('dashboard')
+    else:
+        form = EngagementRecordForm()
+
+    return render(request, 'add_engagement.html', {'form': form})
+@login_required
+def dashboard(request):
+    records = request.user.engagementrecord_set.all()
+    return render(request, 'dashboard.html', {'records': records})      

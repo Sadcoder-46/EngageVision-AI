@@ -1,16 +1,59 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<div class="content-page">
-    <h2 class="fw-bold mb-4">Admin Dashboard</h2>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card card-modern p-4 text-center">
-                <h4>Total Users</h4>
-                <h2 class="fw-bold" style="color: #4a90e2;">{{ user_count }}</h2>
-            </div>
+<div class="dashboard-container">
+
+    <h1 class="dashboard-title">Admin Dashboard</h1>
+
+    <!-- Stats Section -->
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h2>{{ total_users }}</h2>
+            <p>Total Users</p>
         </div>
-    </div>
-</div>
-{% endblock %}
 
+        <div class="stat-card">
+            <h2>
+                {% if avg_score %}
+                    {{ avg_score|floatformat:2 }}
+                {% else %}
+                    0
+                {% endif %}
+            </h2>
+            <p>Average Attention Score</p>
+        </div>
+
+    </div>
+
+    <!-- Records Section -->
+    <div class="records-section">
+
+        <div class="records-header">
+            <h2>Your Engagement Records</h2>
+            <a href="{% url 'add_engagement' %}" class="btn-primary">
+                + Add New Record
+            </a>
+        </div>
+
+        <div class="records-card">
+            <ul class="records-list">
+                {% for record in records %}
+                    <li>
+                        <strong>Score:</strong> {{ record.attention_score }}
+                        |
+                        <strong>Emotion:</strong> {{ record.emotion }}
+                        |
+                        <strong>Time:</strong> {{ record.timestamp }}
+                    </li>
+                {% empty %}
+                    <li>No records found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -37,9 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',
+    # Third-party apps
     'captcha',
     'widget_tweaks',
+    # Local apps
+    'myapp',
+    'accounts',
+    'students',
+    'engagement',
+    'analytics',
+    'ai_module',
 ]
 
 MIDDLEWARE = [
@@ -124,12 +131,20 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Media files (Video Uploads)
+# https://docs.djangoproject.com/en/4.2/topics/files/
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+EMEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'mesadiq46@gmail.com'
-EMAIL_HOST_PASSWORD = 'nfpp jbho idro eoes'
+EMAIL_HOST_PASSWORD = 'iafndqpzcvttonwe'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

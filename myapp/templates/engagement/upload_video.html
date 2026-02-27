@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <h1 class="page-title">Upload CCTV Video</h1>
+    
+    <div class="card-modern">
+        <div class="upload-instructions">
+            <h3><i class="fas fa-info-circle"></i> Instructions</h3>
+            <ul>
+                <li>Upload a CCTV video file (MP4, AVI, MOV, MKV, FLV, WMV)</li>
+                <li>Maximum file size: 500MB</li>
+                <li>Video will be automatically processed using AI face detection</li>
+                <li>Engagement records will be generated automatically</li>
+            </ul>
+        </div>
+        
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="id_title">Video Title (Optional)</label>
+                <input type="text" name="title" id="id_title" class="form-control" 
+                       placeholder="Enter a title for this video">
+            </div>
+            
+            <div class="form-group">
+                <label for="id_video_file">Select Video File *</label>
+                <input type="file" name="video_file" id="id_video_file" 
+                       class="form-control-file" accept="video/*" required>
+                <small class="form-text text-muted">
+                    Supported formats: MP4, AVI, MOV, MKV, FLV, WMV
+                </small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload & Process
+                </button>
+                <a href="{% url 'engagement:video_list' %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card-modern mt-4">
+        <h3>How It Works</h3>
+        <div class="process-steps">
+            <div class="step">
+                <div class="step-icon">1</div>
+                <div class="step-content">
+                    <h4>Upload</h4>
+                    <p>Upload your CCTV footage</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-icon">2</div>
+                <div class="step-content">
+                    <h4>Process</h4>
+                    <p>AI detects faces frame-by-frame</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-icon">3</div>
+                <div class="step-content">
+                    <h4>Analyze</h4>
+                    <p>Behavior is classified automatically</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-icon">4</div>
+                <div class="step-content">
+                    <h4>View Results</h4>
+                    <p>Check dashboard for analytics</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .upload-instructions {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    
+    .upload-instructions h3 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+    
+    .upload-instructions ul {
+        margin-bottom: 0;
+        padding-left: 20px;
+    }
+    
+    .upload-instructions li {
+        margin-bottom: 8px;
+    }
+    
+    .upload-form .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .upload-form label {
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+    
+    .process-steps {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    
+    .step {
+        flex: 1;
+        min-width: 150px;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #4a90d9;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+        margin: 0 0 5px 0;
+        font-size: 16px;
+    }
+    
+    .step-content p {
+        margin: 0;
+        color: #666;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+

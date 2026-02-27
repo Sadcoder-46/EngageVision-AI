@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>AI-Driven Classroom Engagement Monitoring</title>
+    {% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -15,6 +17,7 @@
     <style>
         /* ============================================
            GLOBAL THEME - Light Professional SaaS Style
+           with Nature Gradient Background
            ============================================ */
 
         /* Base Styles */
@@ -24,12 +27,49 @@
             padding: 0;
             min-height: 100vh;
             padding-top: 70px;
-            background: linear-gradient(135deg, #f8fbff, #e6f0ff);
+            /* Nature Gradient Background - Light Theme */
+            background: 
+                linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 25%, #e8f5e9 50%, #c8e6c9 75%, #f1f8e9 100%);
+            background-attachment: fixed;
+            background-size: cover;
             color: #222;
+            position: relative;
+        }
+
+        /* Nature-inspired floating shapes for depth */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(129, 212, 250, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -10%;
+            right: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(200, 230, 201, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
         }
 
         /* Page Container */
-        .page-container {
+        .page-container {   
             min-height: calc(100vh - 70px);
             padding: 40px 15px;
         }
@@ -48,22 +88,30 @@
             padding: 20px 15px;
         }
 
-        /* Modern Card Style */
+        /* Modern Card Style - Glassmorphism */
         .card-modern {
-            border: none;
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            /* Glassmorphism Effect */
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
             padding: 40px;
             width: 100%;
             max-width: 450px;
             margin: 0 auto;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .card-modern:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.85);
         }
 
         /* Title Styles */

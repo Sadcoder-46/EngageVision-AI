@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
+
 urlpatterns = [
 
     # Default Page → Login
@@ -38,4 +39,7 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(
              template_name='password_reset_complete.html'),
          name='password_reset_complete'),
+         # Engagement Record Submission
+    path('add-engagement/', views.add_engagement, name='add_engagement'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

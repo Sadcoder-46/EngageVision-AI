@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <h1 class="page-title">AI Camera - Engagement Detection</h1>
+    
+    <div class="card-modern">
+        <div class="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+        
+        <div class="camera-controls mt-4">
+            <button id="startBtn" class="btn btn-primary">Start Camera</button>
+            <button id="stopBtn" class="btn btn-danger" disabled>Stop Camera</button>
+        </div>
+        
+        <div id="detectionResults" class="mt-4" style="display:none;">
+            <h3>Detection Results</h3>
+            <div class="results-grid">
+                <div class="result-item">
+                    <span class="result-label">Faces Detected:</span>
+                    <span id="faceCount" class="result-value">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Emotion:</span>
+                    <span id="emotion" class="result-value">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Attention Score:</span>
+                    <span id="attentionScore" class="result-value">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'ai_module:ai_dashboard' %}" class="btn btn-secondary">Back to AI Dashboard</a>
+        </div>
+    </div>
+    
+    <div class="card-modern mt-4">
+        <h3 class="mb-3">Save Engagement Record</h3>
+        <form method="POST" action="{% url 'engagement:engagement_create' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="studentSelect" class="form-label">Select Student</label>
+                <select name="student" id="studentSelect" class="form-control">
+                    {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="hidden" id="attentionScoreInput" name="attention_score" value="0">
+            <input type="hidden" id="emotionInput" name="emotion" value="Neutral">
+            <button type="submit" class="btn btn-success">Save Engagement Record</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let video, canvas, stream;
+    let isRunning = false;
+    let detectionInterval;
+    
+    const emotions = ['Happy', 'Neutral', 'Sad', 'Distracted'];
+    
+    document.getElementById('startBtn').addEventListener('click', startCamera);
+    document.getElementById('stopBtn').addEventListener('click', stopCamera);
+    
+    function startCamera() {
+        video = document.getElementById('video');
+        canvas = document.getElementById('canvas');
+        
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(s) {
+                stream = s;
+                video.srcObject = stream;
+                isRunning = true;
+                
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+                document.getElementById('detectionResults').style.display = 'block';
+                
+                simulateDetection();
+            })
+            .catch(function(err) {
+                console.error("Error accessing camera: " + err);
+                alert("Error accessing camera. Please ensure camera permissions are granted.");
+            });
+    }
+    
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        if (detectionInterval) {
+            clearInterval(detectionInterval);
+        }
+        isRunning = false;
+        
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('stopBtn').disabled = true;
+    }
+    
+    function simulateDetection() {
+        detectionInterval = setInterval(function() {
+            const faceCount = Math.floor(Math.random() * 3);
+            const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
+            const attentionScore = (Math.random() * 100).toFixed(1);
+            
+            document.getElementById('faceCount').textContent = faceCount;
+            document.getElementById('emotion').textContent = randomEmotion;
+            document.getElementById('attentionScore').textContent = attentionScore;
+            
+            document.getElementById('attentionScoreInput').value = attentionScore;
+            document.getElementById('emotionInput').value = randomEmotion;
+        }, 2000);
+    }
+</script>
+{% endblock %}
+

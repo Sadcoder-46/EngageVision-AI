@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from captcha.fields import CaptchaField
 
+from .models import EngagementRecord
+
 
 class RegisterForm(UserCreationForm):
 
@@ -81,3 +83,13 @@ class LoginForm(forms.Form):
             'class': 'form-control',
             'placeholder': 'Enter Captcha'
         })
+    
+        self.fields['captcha'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter Captcha'
+        })
+
+class EngagementRecordForm(forms.ModelForm):
+    class Meta:
+        model = EngagementRecord
+        fields = ['attention_score', 'emotion']

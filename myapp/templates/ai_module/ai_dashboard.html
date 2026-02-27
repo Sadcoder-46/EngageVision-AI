@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <h1 class="page-title">AI Dashboard</h1>
+    
+    <div class="card-modern">
+        <h3 class="mb-3">AI-Powered Engagement Monitoring</h3>
+        <p class="text-muted">
+            This module uses computer vision to detect student engagement in real-time.
+            The system analyzes facial expressions and attention patterns to assess engagement levels.
+        </p>
+        
+        <div class="ai-features">
+            <div class="feature-item">
+                <h5>Face Detection</h5>
+                <p>Uses OpenCV to detect faces in real-time video streams</p>
+            </div>
+            <div class="feature-item">
+                <h5>Emotion Recognition</h5>
+                <p>Simulates emotion detection (Happy, Neutral, Sad, Distracted)</p>
+            </div>
+            <div class="feature-item">
+                <h5>Attention Scoring</h5>
+                <p>Calculates attention scores based on facial analysis</p>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'ai_module:ai_camera' %}" class="btn btn-primary btn-lg">Start Camera</a>
+        </div>
+    </div>
+    
+    <div class="card-modern mt-4">
+        <h3 class="mb-3">How It Works</h3>
+        <ol class="process-list">
+            <li>Open the camera interface</li>
+            <li>The system will access your webcam</li>
+            <li>Face detection will identify students in the frame</li>
+            <li>Emotion and attention will be analyzed</li>
+            <li>Results are automatically saved to engagement records</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+

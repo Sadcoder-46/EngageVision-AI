@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <div class="card-modern">
+        <h3 class="text-center fw-bold mb-4">Delete Engagement Record</h3>
+        
+        <div class="alert alert-warning">
+            <p>Are you sure you want to delete this engagement record?</p>
+            <ul>
+                <li><strong>Student:</strong> {{ record.student.name }}</li>
+                <li><strong>Attention Score:</strong> {{ record.attention_score }}</li>
+                <li><strong>Emotion:</strong> {{ record.emotion }}</li>
+                <li><strong>Timestamp:</strong> {{ record.timestamp }}</li>
+            </ul>
+        </div>
+        
+        <form method="POST" class="text-center">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'engagement:engagement_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

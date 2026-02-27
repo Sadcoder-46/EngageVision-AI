@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="card-modern">
+            <h3 class="text-center fw-bold mb-4">Register</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    <div class="text-danger small">{{ form.username.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                    <div class="text-danger small">{{ form.email.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.password1.label_tag }}
+                    {{ form.password1 }}
+                    <div class="text-danger small">{{ form.password1.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form.password2.label_tag }}
+                    {{ form.password2 }}
+                    <div class="text-danger small">{{ form.password2.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Captcha</label>
+                    <div class="captcha-container">
+                        {{ form.captcha }}
+                    </div>
+                    <div class="text-danger small">{{ form.captcha.errors }}</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
+
+            <div class="text-center mt-4">
+                Already have an account? <a href="{% url 'accounts:login' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

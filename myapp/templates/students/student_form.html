@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="content-page">
+    <div class="card-modern">
+        <h3 class="text-center fw-bold mb-4">{{ action }} Student</h3>
+        
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                <div class="text-danger small">{{ form.name.errors }}</div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                <div class="text-danger small">{{ form.email.errors }}</div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{% url 'students:student_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

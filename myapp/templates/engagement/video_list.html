@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-page">
+    <div class="page-header">
+        <h1 class="page-title">Video Library</h1>
+        <a href="{% url 'engagement:upload_video' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Upload New Video
+        </a>
+    </div>
+    
+    {% if videos %}
+    <div class="video-grid">
+        {% for video in videos %}
+        <div class="video-card">
+            <div class="video-thumbnail">
+                <i class="fas fa-video"></i>
+            </div>
+            <div class="video-info">
+                <h3>{{ video.title|default:"CCTV Recording" }}</h3>
+                <p class="video-date">{{ video.uploaded_at|date:"M d, Y H:i" }}</p>
+                
+                <div class="video-status">
+                    {% if video.processing_status == 'completed' %}
+                        <span class="badge badge-success">Completed</span>
+                    {% elif video.processing_status == 'processing' %}
+                        <span class="badge badge-warning">Processing</span>
+                    {% elif video.processing_status == 'failed' %}
+                        <span class="badge badge-danger">Failed</span>
+                    {% else %}
+                        <span class="badge badge-secondary">Pending</span>
+                    {% endif %}
+                </div>
+                
+                <div class="video-stats">
+                    {% if video.duration_seconds %}
+                    <span><i class="fas fa-clock"></i> {{ video.duration_seconds|floatformat:1 }}s</span>
+                    {% endif %}
+                    {% if video.total_frames %}
+                    <span><i class="fas fa-film"></i> {{ video.total_frames }} frames</span>
+                    {% endif %}
+                </div>
+                
+                <div class="video-actions">
+                    <a href="{% url 'engagement:video_detail' video.id %}" class="btn btn-sm btn-info">
+                        View Details
+                    </a>
+                    {% if video.processed %}
+                    <a href="{% url 'analytics:analytics' %}?video={{ video.id }}" class="btn btn-sm btn-primary">
+                        Analytics
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if videos.has_other_pages %}
+    <div class="pagination">
+        {% if videos.has_previous %}
+        <a href="?page={{ videos.previous_page_number }}" class="btn btn-secondary">Previous</a>
+        {% endif %}
+        
+        <span class="current-page">Page {{ videos.number }} of {{ videos.paginator.num_pages }}</span>
+        
+        {% if videos.has_next %}
+        <a href="?page={{ videos.next_page_number }}" class="btn btn-secondary">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-video-slash"></i>
+        <h3>No Videos Uploaded</h3>
+        <p>Upload a CCTV video to start analyzing classroom engagement.</p>
+        <a href="{% url 'engagement:upload_video' %}" class="btn btn-primary">
+            Upload First Video
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    
+    .video-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .video-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    }
+    
+    .video-thumbnail {
+        height: 150px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .video-thumbnail i {
+        font-size: 48px;
+        color: white;
+        opacity: 0.8;
+    }
+    
+    .video-info {
+        padding: 20px;
+    }
+    
+    .video-info h3 {
+        margin: 0 0 5px 0;
+        font-size: 18px;
+        color: #333;
+    }
+    
+    .video-date {
+        color: #666;
+        font-size: 14px;
+        margin: 0 0 10px 0;
+    }
+    
+    .video-status {
+        margin-bottom: 10px;
+    }
+    
+    .video-stats {
+        display: flex;
+        gap: 15px;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+    }
+    
+    .video-stats i {
+        margin-right: 5px;
+    }
+    
+    .video-actions {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 12px;
+    }
+    
+    .empty-state i {
+        font-size: 64px;
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state h3 {
+        color: #666;
+        margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+        color: #999;
+        margin-bottom: 20px;
+    }
+    
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .current-page {
+        color: #666;
+    }
+</style>
+{% endblock %}
+
